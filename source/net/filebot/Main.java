@@ -42,7 +42,6 @@ import net.filebot.ui.MainFrame;
 import net.filebot.ui.NotificationHandler;
 import net.filebot.ui.PanelBuilder;
 import net.filebot.ui.SinglePanelFrame;
-import net.filebot.ui.SupportDialog;
 import net.filebot.ui.transfer.FileTransferable;
 import net.filebot.util.PreferencesMap.PreferencesEntry;
 import net.filebot.util.ui.SwingEventBus;
@@ -191,7 +190,6 @@ public class Main {
 
 			// make sure any long running operations are done now and not later on the shutdown hook thread
 			HistorySpooler.getInstance().commit();
-			SupportDialog.maybeShow();
 
 			System.exit(0);
 		}));
