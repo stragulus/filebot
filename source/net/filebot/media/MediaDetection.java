@@ -42,6 +42,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import net.filebot.ApplicationFolder;
 import net.filebot.Language;
@@ -639,8 +640,12 @@ public class MediaDetection {
 		if (movieNameMatches.isEmpty()) {
 			movieNameMatches = matchMovieFromStringWithoutSpacing(terms, strict);
 
-			if (movieNameMatches.isEmpty() && !terms.equals(stripReleaseInfo(terms, true))) {
-				movieNameMatches = matchMovieFromStringWithoutSpacing(stripReleaseInfo(terms, true), strict);
+			// check alternative terms if necessary and only if they're different
+			if (movieNameMatches.isEmpty()) {
+				List<String> alternativeTerms = stripReleaseInfo(terms, true);
+				if (!terms.containsAll(alternativeTerms)) {
+					movieNameMatches = matchMovieFromStringWithoutSpacing(alternativeTerms, strict);
+				}
 			}
 		}
 
@@ -706,12 +711,7 @@ public class MediaDetection {
 
 			@Override
 			protected String normalize(Object object) {
-				Matcher ym = year.matcher(object.toString());
-				StringBuilder sb = new StringBuilder();
-				while (ym.find()) {
-					sb.append(ym.group()).append(' ');
-				}
-				return sb.toString().trim();
+				return streamMatches(object.toString(), year).mapToInt(Integer::parseInt).flatMap(i -> IntStream.of(i, i + 1)).mapToObj(Objects::toString).collect(joining(" "));
 			}
 
 			@Override
@@ -1283,13 +1283,13 @@ public class MediaDetection {
 	public static List<Integer> grepImdbId(CharSequence text) {
 		// scan for imdb id patterns like tt1234567
 		Pattern imdbId = Pattern.compile("(?<!\\p{Alnum})tt(\\d{7})(?!\\p{Alnum})", Pattern.CASE_INSENSITIVE);
-		return streamMatches(text, imdbId, m -> m.group(1)).map(Integer::new).collect(toList());
+		return streamMatches(text, imdbId, m -> m.group(1)).map(Integer::parseInt).collect(toList());
 	}
 
 	public static List<Integer> grepTheTvdbId(CharSequence text) {
 		// scan for thetvdb id patterns like http://www.thetvdb.com/?tab=series&id=78874&lid=14
 		Pattern tvdbUrl = Pattern.compile("thetvdb.com[\\p{Graph}]*?[\\p{Punct}]id=(\\d+)", Pattern.CASE_INSENSITIVE);
-		return streamMatches(text, tvdbUrl, m -> m.group(1)).map(Integer::new).collect(toList());
+		return streamMatches(text, tvdbUrl, m -> m.group(1)).map(Integer::parseInt).collect(toList());
 	}
 
 	public static Movie grepMovie(File nfo, MovieIdentificationService resolver, Locale locale) throws Exception {
