@@ -1,3 +1,6 @@
+# No, I will not be updating this. go read the license/readme in the original repo, then stop fucking asking.
+
+
 This is a fork to provide up-to-date Windows installers and JARs.  
 The only change to the FileBot code is removing the donate nag on quit.
 
