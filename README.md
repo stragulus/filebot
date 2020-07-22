@@ -1,12 +1,19 @@
-# No, I will not be updating this. go read the license/readme in the original repo, then stop fucking asking.
+# About
 
+This is a fork of filebot, back when it had a GPL3 license.
 
-This is a fork to provide up-to-date Windows installers and JARs.  
-The only change to the FileBot code is removing the donate nag on quit.
+# Building on GNU/Debian
 
----
+You will need some tools to build:
 
-# FileBot
-![Jenkins](https://img.shields.io/jenkins/s/http/5.135.178.184/e95a91fa8beb/FileBot.svg)
-![Github All Releases](https://img.shields.io/github/downloads/Phoenix09/filebot/total.svg)
-![Github Releases](https://img.shields.io/github/downloads/Phoenix09/filebot/latest/total.svg)
+    sudo apt-get install openjdk-11-jdk ant
+
+Download dependencies:
+
+    ant resolve
+
+WIP
+
+# Installing
+
+WIP
